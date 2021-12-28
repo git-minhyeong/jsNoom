@@ -1,3 +1,5 @@
+import http from "http";
+import WebSocket from "ws";
 import express from "express";
 
 const app = express();
@@ -6,7 +8,22 @@ app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get("/", (req,res) => res.render("home"));
+app.get("/", (_,res) => res.render("home"));
+app.get("/*", (_, res) => res.redirect("/"));
 
 const handleListen = () => console.log(`Listening on https://localhost:3000`)
-app.listen(3000, handleListen);
+// app.listen(3000, handleListen);
+
+// express 는 https protocol을 다루지만 ws는 wss Web Socket 프로토콜을 다룬다
+// 합쳐보자
+
+const server = http.createServer(app); //http 서버
+const wss = new WebSocket.Server({ server });
+// server를 굳이넣지 않아도 되지만
+// 안에 server를 전달함으로써 http 서버와 WebSocket을 같이 돌릴 수 있다
+// 같은 서버 같은 포트에서 http websocket을 둘 다 작동시키기 위함
+// 필수는 아님, 따로 돌릴 수 있고
+
+server.listen(3000, handleListen);
+// app 에서 별로 안바뀐것 같지만 http서버 위에 websocket을 같이...
+
