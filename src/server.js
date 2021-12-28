@@ -51,7 +51,7 @@ wss.on("connection", (socket) => {
     socket.on("close", onSocketClose);
     // socket.on("message", onSocketMessage);
     socket.on("message", (message) => {
-        sockets.forEach(aSocket => aSocket.send(message));
+        sockets.forEach(aSocket => aSocket.send(message.toString('utf8')));
     });
     // socket.send("Hello!");
 });
