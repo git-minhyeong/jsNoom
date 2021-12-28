@@ -41,12 +41,17 @@ function onSocketClose() {
 //     console.log(message.toString('utf8'));
 // }
 
+const sockets = [];
+// fake database
+// 누군가 서버에 연결하면 connection을 sockets에 넣음
+
 wss.on("connection", (socket) => {
+    sockets.push(socket);
     console.log("Connected to Browser V");
     socket.on("close", onSocketClose);
     // socket.on("message", onSocketMessage);
     socket.on("message", (message) => {
-        socket.send(message);
+        sockets.forEach(aSocket => aSocket.send(message));
     });
     // socket.send("Hello!");
 });
