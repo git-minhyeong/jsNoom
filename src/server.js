@@ -24,10 +24,23 @@ const wss = new WebSocket.Server({ server });
 // 같은 서버 같은 포트에서 http websocket을 둘 다 작동시키기 위함
 // 필수는 아님, 따로 돌릴 수 있고
 
-function handleConnection(socket) {
-    console.log(socket);
-}
-wss.on("connection", handleConnection);
+// function handleConnection(socket) {
+//     console.log(socket);
+// }
+// 여기서의 소켓은 브라우저임
+// wss.on("connection", handleConnection);
+// wss.on("connection", (socket) => {
+//     console.log(socket);
+// })
+
+wss.on("connection", (socket) => {
+    console.log("Connected to Browser V");
+    socket.on("close", () => console.log("Disconnected from client X"));
+    socket.on("message", (message) => {
+        console.log(message.toString('utf8'));
+    })
+    socket.send("Hello!");
+});
 
 server.listen(3000, handleListen);
 // app 에서 별로 안바뀐것 같지만 http서버 위에 websocket을 같이...
