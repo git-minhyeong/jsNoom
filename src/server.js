@@ -33,13 +33,22 @@ const wss = new WebSocket.Server({ server });
 //     console.log(socket);
 // })
 
+function onSocketClose() {
+    console.log("Disconnected from client X");
+}
+
+// function onSocketMessage(message) {
+//     console.log(message.toString('utf8'));
+// }
+
 wss.on("connection", (socket) => {
     console.log("Connected to Browser V");
-    socket.on("close", () => console.log("Disconnected from client X"));
+    socket.on("close", onSocketClose);
+    // socket.on("message", onSocketMessage);
     socket.on("message", (message) => {
-        console.log(message.toString('utf8'));
-    })
-    socket.send("Hello!");
+        socket.send(message);
+    });
+    // socket.send("Hello!");
 });
 
 server.listen(3000, handleListen);
