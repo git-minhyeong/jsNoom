@@ -8,7 +8,7 @@ app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get("/", (_,res) => res.render("home"));
+app.get("/", (_, res) => res.render("home"));
 app.get("/*", (_, res) => res.redirect("/"));
 
 const handleListen = () => console.log(`Listening on https://localhost:3000`)
@@ -23,6 +23,11 @@ const wss = new WebSocket.Server({ server });
 // 안에 server를 전달함으로써 http 서버와 WebSocket을 같이 돌릴 수 있다
 // 같은 서버 같은 포트에서 http websocket을 둘 다 작동시키기 위함
 // 필수는 아님, 따로 돌릴 수 있고
+
+function handleConnection(socket) {
+    console.log(socket);
+}
+wss.on("connection", handleConnection);
 
 server.listen(3000, handleListen);
 // app 에서 별로 안바뀐것 같지만 http서버 위에 websocket을 같이...
