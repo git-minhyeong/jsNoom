@@ -1,7 +1,6 @@
 import http from "http";
 import WebSocket from "ws";
 import express from "express";
-import { parse } from "path";
 
 const app = express();
 
@@ -59,9 +58,11 @@ wss.on("connection", (socket) => {
                 // sockets.forEach(aSocket => aSocket.send(message.payload.toString('utf8')));
                 sockets.forEach(aSocket => aSocket.send(`${socket.nickname}: ${message.payload}`)
                 );
+                break;
             case "nickname":
                 // console.log(message.payload);
                 socket["nickname"] = message.payload;
+                break;
         }
         // if (message.type === "new_message") {
         //     sockets.forEach(aSocket => aSocket.send(message.payload.toString('utf8')));
