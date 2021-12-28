@@ -59,3 +59,12 @@ wss.on("connection", (socket) => {
 server.listen(3000, handleListen);
 // app 에서 별로 안바뀐것 같지만 http서버 위에 websocket을 같이...
 
+
+// {
+//     type:"message",
+//     payload:"hello everyone!"
+// }
+// 이런 형태
+
+// JSON.stringify
+// JSON.parse 
