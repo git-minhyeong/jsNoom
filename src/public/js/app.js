@@ -10,6 +10,9 @@ function makeMessage(type, payload) {
     const msg = {type, payload};
     return JSON.stringify(msg);
 }
+// 백엔드는 스트링으로 받는다
+// 왜냐면 frontend는 여러 언어일 수 있기도 하고...
+// 백엔드에서는 다시 오브젝트로 바꿔줘야겠지
 
 function handleOpen() {
     console.log("Connected to Server V");
@@ -54,6 +57,7 @@ function handleNickSubmit(event) {
     //     payload:input.value,
     // });
     socket.send(makeMessage("nickname", input.value));
+    input.value = "";
 }
 
 messageForm.addEventListener("submit", handleSubmit);
