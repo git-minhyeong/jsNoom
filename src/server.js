@@ -23,18 +23,38 @@ const httpServer = http.createServer(app); //http 서버
 const wsServer = SocketIO(httpServer);
 // localhost:3000/socket.io/socket.io.js
 
+function publicRooms() {
+    const { sockets: { adapter: { sids, rooms } } } = wsServer;
+    // const sids = wsServer.sockets.adapter.sids;
+    // const rooms = wsServer.socket.adapter.rooms;
+    const publicRooms = [];
+    rooms.forEach((_, key) => {
+        if(sids.get(key) === undefined) {
+            publicRomms.push(key);
+        }
+    });
+    return publicRomms;
+}
+
 wsServer.on("connection", (socket) => {
     socket["nickname"] = "Anon";
     socket.onAny((event) => {
+        // console.log(wsServer.socket.adapter);
+        // JS의 Map오브젝트를 볼 수 있다
         console.log(`Socket Event:${event}`);
-    })
+    });
     socket.on("enter_room", (roomName, done) => {
         socket.join(roomName);
         done();
         socket.to(roomName).emit("welcome", socket.nickname);
+        wsServer.sockets.emit("room_change", publicRooms());
     });
     socket.on("disconnecting", () => {
         socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));
+        // wsServer.sockets.emit("room_change", publicRooms());
+    });
+    socket.on("disconnect", () => {
+        wsServer.sockets.emit("room_change", publicRooms());
     });
     socket.on("new_message", (msg, room, done) => {
         socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
@@ -92,7 +112,7 @@ function onSocketClose() {
 //         // if (message.type === "new_message") {
 //         //     sockets.forEach(aSocket => aSocket.send(message.payload.toString('utf8')));
 //         // } else if (message.type === "nickname") {
-            
+
 //         // }
 //     });
 //     // socket.send("Hello!");

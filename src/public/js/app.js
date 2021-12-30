@@ -1,8 +1,8 @@
 const socket = io();
 
-const welcome = document.querySelector("#welcome");
+const welcome = document.getElementById("welcome");
 const form = welcome.querySelector("form");
-const room = document.querySelector("#room");
+const room = document.getElementById("room");
 
 room.hidden = true;
 
@@ -68,6 +68,20 @@ socket.on("bye", (left) => {
 })
 
 socket.on("new_message", addMessage); // (msg) => {addMessage(msg))}
+
+socket.on("room_change", (rooms) => {
+    const roomList = welcome.querySelector("ul");
+    roomList.innerHTML = "";
+    if(rooms.lenghth === 0 ){
+        return;
+    }
+    const roomList = welcome.querySelector("ul");
+    rooms.forEach((room) => {
+        const li = document.createElement("li");
+        li.innerText = room;
+        roomList.append(li)
+    });
+})
 
 // ws용 코드
 // const messageList = document.querySelector("ul");
