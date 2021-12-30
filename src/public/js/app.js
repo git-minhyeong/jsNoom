@@ -4,8 +4,6 @@ const welcome = document.querySelector("#welcome");
 const form = welcome.querySelector("form");
 const room = document.querySelector("#room");
 
-console.dir(room);
-
 room.hidden = true;
 
 let roomName;
@@ -17,12 +15,25 @@ function addMessage (message) {
     ul.append(li);
 }
 
+function handleMessageSubmit(e) {
+    e.preventDefault();
+    console.log("Sended!");
+    const input = room.querySelector("input");
+    const value = input.value;
+    socket.emit("new_message", input.value, roomName, () => {
+        addMessage(`You: ${value}`);
+    });
+    input = "";
+}
+
 function showRoom() {
     welcome.hidden = true;
     room.hidden = false;
     const h3 = room.querySelector("h3");
-    console.log(h3);
+    // console.log(h3);
     h3.innerText = `Room ${roomName}`;
+    const form = room.querySelector("form");
+    form.addEventListener("sumbit", handleMessageSubmit);
 }
 
 function handleRoomSubmit(e) {
@@ -41,6 +52,11 @@ socket.on("welcome", () => {
     addMessage("Someone Joined!");
 })
 
+socket.on("bye", () => {
+    addMessage("someone left T_T");
+})
+
+socket.on("new_message", addMessage); // (msg) => {addMessage(msg))}
 
 // ws용 코드
 // const messageList = document.querySelector("ul");
