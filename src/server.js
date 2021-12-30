@@ -24,7 +24,14 @@ const wsServer = SocketIO(httpServer);
 // localhost:3000/socket.io/socket.io.js
 
 wsServer.on("connection", (socket) => {
-    console.log(socket);
+    socket.onAny((event) => {
+        console.log(`Socket Event:${event}`);
+    })
+    socket.on("enter_room", (roomName, done) => {
+        socket.join(roomName);
+        done();
+        socket.to(roomName).emit("welcome");
+    });
 });
 
 // server를 굳이넣지 않아도 되지만

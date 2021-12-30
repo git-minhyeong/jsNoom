@@ -1,5 +1,47 @@
 const socket = io();
 
+const welcome = document.querySelector("#welcome");
+const form = welcome.querySelector("form");
+const room = document.querySelector("#room");
+
+console.dir(room);
+
+room.hidden = true;
+
+let roomName;
+
+function addMessage (message) {
+    const ul = room.querySelector("ul");
+    const li = document.createElement("li");
+    li.innerText = message;
+    ul.append(li);
+}
+
+function showRoom() {
+    welcome.hidden = true;
+    room.hidden = false;
+    const h3 = room.querySelector("h3");
+    console.log(h3);
+    h3.innerText = `Room ${roomName}`;
+}
+
+function handleRoomSubmit(e) {
+    e.preventDefault();
+    const input = form.querySelector("input");
+    socket.emit("enter_room", input.value, showRoom);
+    roomName = input.value;
+    input.value= "";
+}
+// 특정 event emit이 된다
+// object로 전송이 된다. string 처리가 필요하지 않다.
+
+form.addEventListener("submit", handleRoomSubmit);
+
+socket.on("welcome", () => {
+    addMessage("Someone Joined!");
+})
+
+
 // ws용 코드
 // const messageList = document.querySelector("ul");
 // const messageForm = document.querySelector("#message");
